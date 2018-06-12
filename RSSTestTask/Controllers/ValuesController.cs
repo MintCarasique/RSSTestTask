@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using RSSTestTask.Models;
 using System.Web.Http;
 
 namespace RSSTestTask.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class ValuesController : ApiController
     {
+        NewsContext newsContext = new NewsContext();
+
         // GET api/values
-        public IEnumerable<string> Get()
+        public IEnumerable<News> Get()
         {
-            return new string[] { "value1", "value2" };
+            return newsContext.NewsSet;
         }
 
         // GET api/values/5

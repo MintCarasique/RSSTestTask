@@ -6,6 +6,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using RSSTestTask.Models;
+using System.Data.Entity;
 
 namespace RSSTestTask
 {
@@ -13,6 +15,8 @@ namespace RSSTestTask
     {
         protected void Application_Start()
         {
+            Database.SetInitializer(new NewsDbInitializer());
+
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
