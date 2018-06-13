@@ -13,6 +13,8 @@ namespace RSSTestTask.Models
 
         public string Description { get; set; }
 
-        public DateTime date { get; set; }
+        public DateTime Date { get; set; }
+
+        public ICollection<Comment> Comments { get; set; }
     }
 }

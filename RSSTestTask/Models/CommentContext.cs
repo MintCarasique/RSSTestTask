@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data.Entity;
 
 namespace RSSTestTask.Models
 {
-    public class Comment
+    public class CommentContext : DbContext
     {
-        public int Id { get; set; }
-
-        public string Text { get; set; }
+        public DbSet<Comment> Comments { get; set; }
     }
 }

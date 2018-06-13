@@ -10,7 +10,11 @@ namespace RSSTestTask.Models
     {
         protected override void Seed(NewsContext context)
         {
-            context.NewsSet.Add(new News { date = DateTime.Now, Description = "TestDescription", Title = "TestTitle" });
+            context.NewsSet.Add(new News { Date = DateTime.Now,
+                Description = "TestDescription",
+                Title = "TestTitle",
+                Comments = new List<Comment> { new Comment {Text = "Fascinating" } }
+            });
         }
     }
 }
