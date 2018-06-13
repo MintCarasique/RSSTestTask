@@ -9,5 +9,13 @@ namespace RSSTestTask.Models
     public class NewsContext : DbContext
     {
         public DbSet<News> NewsSet { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<News>()
+                .HasMany(c => c.Comments).WithRequired(n => n.News);
+        }
     }
 }

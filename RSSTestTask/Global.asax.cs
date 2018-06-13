@@ -15,7 +15,7 @@ namespace RSSTestTask
     {
         protected void Application_Start()
         {
-            Database.SetInitializer(new NewsDbInitializer());
+            //Database.SetInitializer(new NewsDbInitializer());
 
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
