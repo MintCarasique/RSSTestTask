@@ -13,44 +13,44 @@ using RSSTestTask.Models;
 
 namespace RSSTestTask.Controllers
 {
-    public class NewsController : ApiController
+    public class CommentsController : ApiController
     {
         private NewsContext db = new NewsContext();
 
-        // GET: api/News
-        public IQueryable<News> GetNewsSet()
+        // GET: api/Comments
+        public IQueryable<Comment> GetComments()
         {
-            return db.NewsSet.Include(q => q.Comments);
+            return db.Comments;
         }
 
-        // GET: api/News/5
-        [ResponseType(typeof(News))]
-        public async Task<IHttpActionResult> GetNews(int id)
+        // GET: api/Comments/5
+        [ResponseType(typeof(Comment))]
+        public async Task<IHttpActionResult> GetComment(int id)
         {
-            News news = await db.NewsSet.FindAsync(id);
-            if (news == null)
+            Comment comment = await db.Comments.FindAsync(id);
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            return Ok(news);
+            return Ok(comment);
         }
 
-        // PUT: api/News/5
+        // PUT: api/Comments/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutNews(int id, News news)
+        public async Task<IHttpActionResult> PutComment(int id, Comment comment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != news.Id)
+            if (id != comment.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(news).State = EntityState.Modified;
+            db.Entry(comment).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +58,7 @@ namespace RSSTestTask.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!NewsExists(id))
+                if (!CommentExists(id))
                 {
                     return NotFound();
                 }
@@ -71,35 +71,35 @@ namespace RSSTestTask.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/News
-        [ResponseType(typeof(News))]
-        public async Task<IHttpActionResult> PostNews(News news)
+        // POST: api/Comments
+        [ResponseType(typeof(Comment))]
+        public async Task<IHttpActionResult> PostComment(Comment comment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.NewsSet.Add(news);
+            db.Comments.Add(comment);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = news.Id }, news);
+            return CreatedAtRoute("DefaultApi", new { id = comment.Id }, comment);
         }
 
-        // DELETE: api/News/5
-        [ResponseType(typeof(News))]
-        public async Task<IHttpActionResult> DeleteNews(int id)
+        // DELETE: api/Comments/5
+        [ResponseType(typeof(Comment))]
+        public async Task<IHttpActionResult> DeleteComment(int id)
         {
-            News news = await db.NewsSet.FindAsync(id);
-            if (news == null)
+            Comment comment = await db.Comments.FindAsync(id);
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            db.NewsSet.Remove(news);
+            db.Comments.Remove(comment);
             await db.SaveChangesAsync();
 
-            return Ok(news);
+            return Ok(comment);
         }
 
         protected override void Dispose(bool disposing)
@@ -111,9 +111,9 @@ namespace RSSTestTask.Controllers
             base.Dispose(disposing);
         }
 
-        private bool NewsExists(int id)
+        private bool CommentExists(int id)
         {
-            return db.NewsSet.Count(e => e.Id == id) > 0;
+            return db.Comments.Count(e => e.Id == id) > 0;
         }
     }
 }

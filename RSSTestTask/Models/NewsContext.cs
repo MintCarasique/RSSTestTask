@@ -14,8 +14,6 @@ namespace RSSTestTask.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<News>()
-                .HasMany(c => c.Comments).WithRequired(n => n.News);
         }
     }
 }

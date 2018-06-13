@@ -9,8 +9,6 @@ namespace RSSTestTask.Models
     {
         public int Id { get; set; }
 
-        public string Text { get; set; }
-
-        public News News { get; set; }
+        public string Text { get; set; }        
     }
 }
