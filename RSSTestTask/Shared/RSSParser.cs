@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ServiceModel;
 using System.Linq;
 using System.Web;
 using System.Xml;
 using RSSTestTask.Models;
+using System.ServiceModel.Syndication;
 
 namespace RSSTestTask.Shared
 {
@@ -11,22 +13,20 @@ namespace RSSTestTask.Shared
     {
         public static List<News> GetNews(string url)
         {
-            XmlDocument rssDoc = new XmlDocument();
-            rssDoc.Load(url);
-            XmlNodeList rssNodes = rssDoc.SelectNodes("rss/channel/item");
+            XmlReader rssDoc = XmlReader.Create(url);
+            SyndicationFeed feed = SyndicationFeed.Load(rssDoc);
+            rssDoc.Close();
+            //XmlNodeList rssNodes = rssDoc.SelectNodes("rss/channel/item");
             var responseList = new List<News>();
-            foreach(XmlNode rssNode in rssNodes)
+            foreach (SyndicationItem item in feed.Items)
             {
-                XmlNode rssSubNode = rssNode.SelectSingleNode("title");
-                string title = rssSubNode != null ? rssSubNode.InnerText : "";
+                string title = item.Title.Text;
+                
+                DateTime date = item.PublishDate.UtcDateTime;
+                
+                string description = item.Summary.Text;
 
-                rssSubNode = rssNode.SelectSingleNode("pubDate");
-                string date = rssSubNode != null ? rssSubNode.InnerText : "";
-
-                rssSubNode = rssNode.SelectSingleNode("description");
-                string description = rssSubNode != null ? rssSubNode.InnerText : "";
-
-                responseList.Add(new News { Title = title, Date = DateTime.Parse(date), Description = description });
+                responseList.Add(new News { Title = title, Date = date, Description = description });
             }
             return responseList;
         }

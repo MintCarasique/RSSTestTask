@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using RSSTestTask.Models;
+using RSSTestTask.Shared;
 
 namespace RSSTestTask.Controllers
 {
@@ -20,7 +21,16 @@ namespace RSSTestTask.Controllers
         // GET: api/News
         public IQueryable<News> GetNewsSet()
         {
-            Shared.RSSParser.GetNews("https://dev.by/rss");
+            var receivedNews = Shared.RSSParser.GetNews("https://dev.by/rss");
+            var currentNews = db.NewsSet.ToList();
+
+            var updatedNews = receivedNews.ExceptBy(currentNews, func => func.Date);
+            if (updatedNews.Count() != 0)
+            {
+                db.NewsSet.AddRange(updatedNews);
+                db.SaveChanges();
+            };
+
             return db.NewsSet.Include(q => q.Comments);
         }
 
@@ -112,9 +122,12 @@ namespace RSSTestTask.Controllers
             base.Dispose(disposing);
         }
 
+
+
         private bool NewsExists(int id)
         {
             return db.NewsSet.Count(e => e.Id == id) > 0;
         }
+
     }
 }
