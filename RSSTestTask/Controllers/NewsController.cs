@@ -20,6 +20,7 @@ namespace RSSTestTask.Controllers
         // GET: api/News
         public IQueryable<News> GetNewsSet()
         {
+            Shared.RSSParser.GetNews("https://dev.by/rss");
             return db.NewsSet.Include(q => q.Comments);
         }
 
