@@ -10,5 +10,7 @@ namespace RSSTestTask.Models
         public IEnumerable<News> PageOfNews { get; set; }
 
         public int PageAmount { get; set; }
+
+        public int CollectionSize { get; set; }
     }
 }

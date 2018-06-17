@@ -55,7 +55,11 @@ namespace RSSTestTask.Controllers
                 .Skip((id - 1) * maxRows)
                 .Take(maxRows).ToList();
 
-            double pageAmount = (double)((decimal)db.NewsSet.Count() / Convert.ToDecimal(maxRows));
+            newsPage.CollectionSize = db.NewsSet.Count();
+
+            double pageAmount = (double)((decimal)newsPage.CollectionSize / Convert.ToDecimal(maxRows));
+
+
 
             newsPage.PageAmount = (int)Math.Ceiling(pageAmount);
             return Ok(newsPage);
