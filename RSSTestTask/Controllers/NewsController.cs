@@ -18,8 +18,7 @@ namespace RSSTestTask.Controllers
     {
         private NewsContext db = new NewsContext();
 
-        // GET: api/News
-        public IQueryable<News> GetNewsSet()
+        private void UpdateNews()
         {
             var receivedNews = Shared.RSSParser.GetNews("https://dev.by/rss");
             var currentNews = db.NewsSet.ToList();
@@ -30,21 +29,36 @@ namespace RSSTestTask.Controllers
                 db.NewsSet.AddRange(updatedNews);
                 db.SaveChanges();
             };
+        }
 
-            return db.NewsSet.Include(q => q.Comments);
+        // GET: api/News
+        public IQueryable<News> GetNewsSet()
+        {
+            UpdateNews();
+
+            return db.NewsSet.OrderByDescending(exp =>exp.Date).Include(q => q.Comments);
         }
 
         // GET: api/News/5
-        [ResponseType(typeof(News))]
-        public async Task<IHttpActionResult> GetNews(int id)
+        [ResponseType(typeof(NewsPage))]
+        public async Task<IHttpActionResult> GetNewsPage(int id)
         {
-            News news = await db.NewsSet.FindAsync(id);
-            if (news == null)
-            {
-                return NotFound();
-            }
+            int maxRows = 5;
 
-            return Ok(news);
+            var newsPage = new NewsPage();
+
+            UpdateNews();
+
+            newsPage.PageOfNews = db.NewsSet
+                .OrderByDescending(exp => exp.Date)
+                .Include(q => q.Comments)
+                .Skip((id - 1) * maxRows)
+                .Take(maxRows).ToList();
+
+            double pageAmount = (double)((decimal)db.NewsSet.Count() / Convert.ToDecimal(maxRows));
+
+            newsPage.PageAmount = (int)Math.Ceiling(pageAmount);
+            return Ok(newsPage);
         }
 
         // PUT: api/News/5
@@ -84,34 +98,34 @@ namespace RSSTestTask.Controllers
 
         // POST: api/News
         [ResponseType(typeof(News))]
-        public async Task<IHttpActionResult> PostNews(News news)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //public async Task<IHttpActionResult> PostNews(News news)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            db.NewsSet.Add(news);
-            await db.SaveChangesAsync();
+        //    db.NewsSet.Add(news);
+        //    await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = news.Id }, news);
-        }
+        //    return CreatedAtRoute("DefaultApi", new { id = news.Id }, news);
+        //}
 
         // DELETE: api/News/5
-        [ResponseType(typeof(News))]
-        public async Task<IHttpActionResult> DeleteNews(int id)
-        {
-            News news = await db.NewsSet.FindAsync(id);
-            if (news == null)
-            {
-                return NotFound();
-            }
+        //[ResponseType(typeof(News))]
+        //public async Task<IHttpActionResult> DeleteNews(int id)
+        //{
+        //    News news = await db.NewsSet.FindAsync(id);
+        //    if (news == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            db.NewsSet.Remove(news);
-            await db.SaveChangesAsync();
+        //    db.NewsSet.Remove(news);
+        //    await db.SaveChangesAsync();
 
-            return Ok(news);
-        }
+        //    return Ok(news);
+        //}
 
         protected override void Dispose(bool disposing)
         {
