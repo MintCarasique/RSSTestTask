@@ -36,37 +36,44 @@ namespace RSSTestTask.Controllers
             return Ok(comment);
         }
 
-        // PUT: api/Comments/5
+        // POST: api/Comments/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutComment(int id, Comment comment)
+        public async Task<IHttpActionResult> PostComment(int id, Comment comment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != comment.Id)
+            News selectedNews = await db.NewsSet.FindAsync(id);
+            if (selectedNews == null)
             {
-                return BadRequest();
+                return NotFound();
+            }
+            if(selectedNews.Comments == null)
+            {
+                selectedNews.Comments = new List<Comment>();
             }
 
-            db.Entry(comment).State = EntityState.Modified;
+            selectedNews.Comments.Add(new Comment {Author = comment.Author, Text = comment.Text });
+            db.SaveChanges();
+            //db.Entry(comment).State = EntityState.Modified;
 
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CommentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            //try
+            //{
+            //    await db.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    if (!CommentExists(id))
+            //    {
+            //        return NotFound();
+            //    }
+            //    else
+            //    {
+            //        throw;
+            //    }
+            //}
 
             return StatusCode(HttpStatusCode.NoContent);
         }
