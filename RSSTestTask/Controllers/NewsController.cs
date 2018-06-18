@@ -14,6 +14,7 @@ using RSSTestTask.Shared;
 
 namespace RSSTestTask.Controllers
 {
+    [Authorize]
     public class NewsController : ApiController
     {
         private NewsContext db = new NewsContext();

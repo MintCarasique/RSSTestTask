@@ -13,6 +13,7 @@ using RSSTestTask.Models;
 
 namespace RSSTestTask.Controllers
 {
+    [Authorize]
     public class CommentsController : ApiController
     {
         private NewsContext db = new NewsContext();
