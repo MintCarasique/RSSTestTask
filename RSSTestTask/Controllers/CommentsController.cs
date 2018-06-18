@@ -57,25 +57,8 @@ namespace RSSTestTask.Controllers
 
             selectedNews.Comments.Add(new Comment {Author = comment.Author, Text = comment.Text });
             db.SaveChanges();
-            //db.Entry(comment).State = EntityState.Modified;
 
-            //try
-            //{
-            //    await db.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!CommentExists(id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
-
-            return StatusCode(HttpStatusCode.NoContent);
+            return StatusCode(HttpStatusCode.OK);
         }
 
         // POST: api/Comments
