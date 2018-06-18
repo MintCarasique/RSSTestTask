@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace RSSTestTask.Models
+﻿namespace RSSTestTask.Models
 {
     // Models returned by AccountController actions.
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace RSSTestTask.Models
+﻿namespace RSSTestTask.Models
 {
     /// <summary>
     /// Comment data model
