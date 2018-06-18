@@ -27,7 +27,7 @@ namespace RSSTestTask.Models
 
     public class UserInfoViewModel
     {
-        public string Email { get; set; }
+        public string UserName { get; set; }
 
         public bool HasRegistered { get; set; }
 

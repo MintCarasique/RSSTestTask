@@ -38,6 +38,12 @@ namespace RSSTestTask.Controllers
         }
 
         // POST: api/Comments/5
+        /// <summary>
+        /// Add comment under news
+        /// </summary>
+        /// <param name="id">News ID where comment will be placed</param>
+        /// <param name="comment">Comment model</param>
+        /// <returns></returns>
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PostComment(int id, Comment comment)
         {
@@ -62,21 +68,7 @@ namespace RSSTestTask.Controllers
             return StatusCode(HttpStatusCode.OK);
         }
 
-        // POST: api/Comments
-        [ResponseType(typeof(Comment))]
-        public async Task<IHttpActionResult> PostComment(Comment comment)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Comments.Add(comment);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = comment.Id }, comment);
-        }
-
+        
         // DELETE: api/Comments/5
         [ResponseType(typeof(Comment))]
         public async Task<IHttpActionResult> DeleteComment(int id)
