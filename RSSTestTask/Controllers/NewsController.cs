@@ -17,7 +17,7 @@ namespace RSSTestTask.Controllers
 
         private void UpdateNews()
         {
-            var receivedNews = Shared.RSSParser.GetNews("https://dev.by/rss");
+            var receivedNews = RSSParser.GetNews("https://dev.by/rss");
             var currentNews = db.NewsSet.ToList();
 
             var updatedNews = receivedNews.ExceptBy(currentNews, func => func.Date);
@@ -46,15 +46,11 @@ namespace RSSTestTask.Controllers
 
             UpdateNews();
 
-            newsPage.PageOfNews = db.NewsSet
-                .OrderByDescending(exp => exp.Date)
-                .Include(q => q.Comments)
-                .Skip((id - 1) * maxRows)
-                .Take(maxRows).ToList();
+            newsPage = await GetPageAsync(id, maxRows, db);
 
             newsPage.CollectionSize = db.NewsSet.Count();
 
-            double pageAmount = (double)((decimal)newsPage.CollectionSize / Convert.ToDecimal(maxRows));
+            double pageAmount = (double)(newsPage.CollectionSize / Convert.ToDecimal(maxRows));
 
 
 
@@ -62,6 +58,19 @@ namespace RSSTestTask.Controllers
             return Ok(newsPage);
         }
 
+        private Task<NewsPage> GetPageAsync(int id, int maxRows, NewsContext db)
+        {
+            var newsPage = new NewsPage();
+            return Task.Run(() =>
+             {
+                 newsPage.PageOfNews = db.NewsSet
+                 .OrderByDescending(exp => exp.Date)
+                 .Include(q => q.Comments)
+                 .Skip((id - 1) * maxRows)
+                 .Take(maxRows).ToList();
+                 return newsPage;
+             });
+        }
         
         protected override void Dispose(bool disposing)
         {
