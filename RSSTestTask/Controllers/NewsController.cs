@@ -48,7 +48,7 @@ namespace RSSTestTask.Controllers
 
             newsPage = await GetPageAsync(id, maxRows, db);
 
-            newsPage.CollectionSize = db.NewsSet.Count();
+            newsPage.CollectionSize = await GetCollectionSizeAsync(db);
 
             double pageAmount = (double)(newsPage.CollectionSize / Convert.ToDecimal(maxRows));
 
@@ -70,6 +70,14 @@ namespace RSSTestTask.Controllers
                  .Take(maxRows).ToList();
                  return newsPage;
              });
+        }
+
+        private Task<int> GetCollectionSizeAsync(NewsContext db)
+        {
+            return Task.Run(() =>
+            {
+                return db.NewsSet.Count();
+            });
         }
         
         protected override void Dispose(bool disposing)
